@@ -12,8 +12,6 @@ namespace TheCodingMachine;
 use Doctrine\DBAL\Connection;
 use Interop\Container\ContainerInterface;
 use Interop\Container\ServiceProvider;
-use Interop\Container\Exception\ContainerException;
-use Interop\Container\Exception\NotFoundException;
 
 class DbalServiceProvider implements ServiceProvider
 {
