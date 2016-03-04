@@ -1,0 +1,22 @@
+{
+  "name": "xhuberty/dbal-universal-module",
+  "description": "Cross-framework module for doctrine/dbal",
+  "license": "MIT",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "TheCodingMachine\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.0",
+    "container-interop/service-provider": "~0.2.0",
+    "doctrine/dbal": "~2.0"
+  },
+  "require-dev": {
+    "puli/cli":"^1.0",
+    "puli/composer-plugin": "^1.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
