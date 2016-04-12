@@ -1,6 +1,6 @@
 {
     "version": "1.0",
-    "name": "xhuberty/dbal-universal-module",
+    "name": "thecodingmachine/dbal-universal-module",
     "bindings": {
         "78f58aa7-6982-4bb6-944c-71f86003902d": {
             "_class": "Puli\\Discovery\\Binding\\ClassBinding",
@@ -14,6 +14,10 @@
     "packages": {
         "container-interop/container-interop": {
             "install-path": "vendor/container-interop/container-interop",
+            "installer": "composer"
+        },
+        "container-interop/definition-interop": {
+            "install-path": "vendor/container-interop/definition-interop",
             "installer": "composer"
         },
         "container-interop/service-provider": {
@@ -53,6 +57,10 @@
             "installer": "composer",
             "env": "dev"
         },
+        "mnapoli/assembly": {
+            "install-path": "vendor/mnapoli/assembly",
+            "installer": "composer"
+        },
         "padraic/humbug_get_contents": {
             "install-path": "vendor/padraic/humbug_get_contents",
             "installer": "composer",
@@ -60,6 +68,11 @@
         },
         "padraic/phar-updater": {
             "install-path": "vendor/padraic/phar-updater",
+            "installer": "composer",
+            "env": "dev"
+        },
+        "paragonie/random_compat": {
+            "install-path": "vendor/paragonie/random_compat",
             "installer": "composer",
             "env": "dev"
         },
