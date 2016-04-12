@@ -9,6 +9,10 @@
 namespace TheCodingMachine;
 
 
+use Assembly\ArrayDefinitionProvider;
+use Assembly\ObjectDefinition;
+use Assembly\ParameterDefinition;
+use Assembly\Reference;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver;
@@ -17,79 +21,37 @@ use Interop\Container\ServiceProvider;
 
 class DbalServiceProvider implements ServiceProvider
 {
-    public static function getServices()
+    /**
+     * @return array
+     */
+    public static function getServices() : array
     {
         return [
-            Connection::class => 'createConnection',
-            'dbal.host'=> 'getHost',
-            'dbal.user'=> 'getUser',
-            'dbal.password'=> 'getPassword',
-            'dbal.port'=> 'getPort',
-            'dbal.dbname'=> 'getDbname',
-            'dbal.charset'=> 'getCharset',
-            'dbal.driverOptions'=> 'getDriverOptions',
-            Driver::class => 'getDriver'
+            Connection::class => new ObjectDefinition(Connection::class, [new Reference(Connection::class.'.params', Driver::class)]),
+            Connection::class.'.params' => new ArrayDefinitionProvider([
+                new Reference('dbal.host'),
+                new Reference('dbal.user'),
+                new Reference('dbal.password'),
+                new Reference('dbal.port'),
+                new Reference('dbal.dbname'),
+                new Reference('dbal.charset'),
+                new Reference('dbal.driverOptions'),
+            ]),
+            'dbal.host'=> new ParameterDefinition('localhost'),
+            'dbal.user'=> new ParameterDefinition('root'),
+            'dbal.password'=> new ParameterDefinition(''),
+            'dbal.port'=> new ParameterDefinition('3306'),
+            'dbal.dbname'=> [DbalServiceProvider::class, 'getDbname'],
+            'dbal.charset'=> new ParameterDefinition('utf8'),
+            'dbal.driverOptions'=> new ArrayDefinitionProvider([1002 => new ParameterDefinition("SET NAMES utf8")]),
+            Driver::class => new ObjectDefinition(Driver::class)
         ];
     }
-    public static function createConnection(ContainerInterface $container, callable $previous = null) : Connection
-    {
-        if($container->has(Connection::class.'.params')) {
-            $params = $container->get('dbal.params');
-        } else {
-            $params = array(
-                'host' => $container->get('dbal.host'),
-                'user' =>$container->get('dbal.user'),
-                'password' => $container->get('dbal.password'),
-                'port' => $container->get('dbal.port'),
-                'dbname' => $container->get('dbal.dbname'),
-                'charset' => $container->get('dbal.charset'),
-                'driverOptions' => $container->get('dbal.driverOptions')
-            );
-        }
 
-        $driver = $container->get(Driver::class);
-
-        $connection =  new Connection($params, $driver);
-
-        return $connection;
-    }
-
-    public static function getHost() :string
-    {
-        return 'localhost';
-    }
-
-    public static function getUser():string
-    {
-        return 'root';
-    }
-
-    public static function getPassword():string
-    {
-        return '';
-    }
-
-    public static function getPort():int
-    {
-        return 3306;
-    }
-
-    public static function getDbname():string
+    
+    public static function getDbname(): string
     {
         throw new DBALException('The "dbname" must be set in the container entry "dbal.dbname"');
     }
-
-    public static function getCharset():string
-    {
-        return 'utf8';
-    }
-
-    public static function getDriverOptions():array
-    {
-        return array(1002 =>"SET NAMES utf8");
-    }
-    public static function getDriver():Driver
-    {
-        return new Driver\PDOMySql\Driver();
-    }
+    
 }
